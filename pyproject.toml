@@ -1,0 +1,29 @@
+[project]
+name = "pdf2md-ai"
+version = "0.1.0"
+description = "Convert PDF pages to Markdown with OpenAI vision OCR via MarkItDown"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Daniel Illescas Romero" }]
+dependencies = [
+    "markitdown>=0.1.6",
+    "markitdown-ocr>=0.1.0",
+    "openai>=1.0.0",
+    "pypdf>=5.0.0",
+    "rich>=13.0.0",
+    "pdfplumber>=0.11.9",
+]
+
+[project.scripts]
+pdf2md-ai = "pdf2md_ai.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src/pdf2md_ai"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/pdf2md_ai" = "pdf2md_ai"
