@@ -83,6 +83,8 @@ If `-o` is a directory (or omitted), the tool writes `{pdf_stem}_pageN.md` or `{
 
 ## Upgrade
 
+Re-run the install script from your clone after pulling changes (same command as install):
+
 ```bash
-pipx reinstall pdf2md-ai
+bash skill/pdf2md-ai/scripts/install.sh
 ```

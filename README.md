@@ -28,7 +28,7 @@ After install, set your API key:
 export OPENAI_API_KEY='your-key-here'
 ```
 
-Upgrade after pulling changes — re-run the install script (it uses `pipx install --force` and refreshes the skill copy).
+Upgrade after pulling changes — re-run the install script (handles first install and upgrade; refreshes the pipx CLI and skill copy).
 
 ### Manual install
 
@@ -82,9 +82,12 @@ If `-o` is omitted, markdown is written next to the PDF as `{name}_pageN.md` or 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
-pdf2md-ai --help
+pip install -e ".[dev]"
+./scripts/quality/checks.sh --fix   # autofix locally
+./scripts/quality/checks.sh         # verify clean
 ```
+
+Steps: Ruff (lint + format, tabs) → ShellCheck + shfmt → basedpyright. CI runs the same `./scripts/quality/checks.sh` on push and pull requests.
 
 ## How it works
 

@@ -18,6 +18,12 @@ dependencies = [
 [project.scripts]
 pdf2md-ai = "pdf2md_ai.cli:main"
 
+[project.optional-dependencies]
+dev = [
+	"basedpyright>=1.29",
+	"ruff",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -27,3 +33,39 @@ only-include = ["src/pdf2md_ai"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/pdf2md_ai" = "pdf2md_ai"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.format]
+indent-style = "tab"
+
+[tool.ruff.lint]
+select = ["F", "I", "E", "S", "B"]
+fixable = ["ALL"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+lines-after-imports = 2
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/**" = ["S603", "S607"]
+
+[tool.basedpyright]
+typeCheckingMode = "strict"
+include = ["src"]
+pythonVersion = "3.11"
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src"]
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+reportUnknownLambdaType = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
+reportUnknownParameterType = false
+reportAttributeAccessIssue = false
+executionEnvironments = [{ root = "src" }]

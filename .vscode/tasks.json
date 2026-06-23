@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Quality Gate (fix)",
+			"type": "shell",
+			"command": "./scripts/quality/checks.sh --fix",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Quality Gate",
+			"type": "shell",
+			"command": "./scripts/quality/checks.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		}
+	]
+}
