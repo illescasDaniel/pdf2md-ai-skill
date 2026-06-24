@@ -9,17 +9,12 @@ description: >-
 
 # pdf2md-ai
 
-Convert PDF pages to Markdown using the global `pdf2md-ai` CLI (MarkItDown + OpenAI vision OCR).
+Convert PDF pages to Markdown using the `pdf2md-ai` CLI (MarkItDown + OpenAI vision OCR).
 
 ## Prerequisites
 
-1. **pipx** installed
-2. **CLI and skill installed** — from a clone of the repo:
-   ```bash
-   bash skill/pdf2md-ai/scripts/install.sh
-   ```
-   If the skill was copied without the full repo, set `PDF2MD_AI_REPO` to the clone path first.
-3. **`OPENAI_API_KEY`** exported in the environment (never hardcode keys in files or commands logged to git)
+1. **`pdf2md-ai` on PATH** — verify with `command -v pdf2md-ai`
+2. **`OPENAI_API_KEY`** exported in the environment (never hardcode keys in files or commands logged to git)
 
 ## When to use
 
@@ -30,10 +25,11 @@ Convert PDF pages to Markdown using the global `pdf2md-ai` CLI (MarkItDown + Ope
 
 ## Default workflow
 
-1. Confirm `OPENAI_API_KEY` is set (`test -n "$OPENAI_API_KEY"`).
-2. Choose pages (`-p`) and output path (`-o`).
-3. Run `pdf2md-ai`.
-4. Read the generated `.md` file and summarize or continue the task.
+1. Confirm `pdf2md-ai` is available (`command -v pdf2md-ai`).
+2. Confirm `OPENAI_API_KEY` is set (`test -n "$OPENAI_API_KEY"`).
+3. Choose pages (`-p`) and output path (`-o`).
+4. Run `pdf2md-ai`.
+5. Read the generated `.md` file and summarize or continue the task.
 
 ## Commands
 
@@ -80,11 +76,3 @@ If `-o` is a directory (or omitted), the tool writes `{pdf_stem}_pageN.md` or `{
 - Commit or write API keys into repo files, skills, or shell history in docs
 - Use local Ollama for this skill (OpenAI-only tool)
 - Assume OCR ran correctly without opening the output markdown
-
-## Upgrade
-
-Re-run the install script from your clone after pulling changes (same command as install):
-
-```bash
-bash skill/pdf2md-ai/scripts/install.sh
-```

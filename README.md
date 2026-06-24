@@ -1,25 +1,39 @@
 # pdf2md-ai
 
-Convert PDF pages to Markdown with **MarkItDown** and **OpenAI vision OCR** for embedded images (screenshots, code blocks, scanned regions).
+An [agent skill](skill/pdf2md-ai/SKILL.md) and CLI for converting PDFs to Markdown with [**MarkItDown**](https://github.com/microsoft/markitdown). Use the CLI directly, or install the skill so agents in Cursor, Claude Code, Codex, and other tools can extract PDF pages on demand.
 
-Fast, local slicing; cloud OCR only when needed.
+The **`pdf2md-ai`** command handles the work: MarkItDown for text, plus **OpenAI vision OCR** for embedded images (screenshots, code blocks, scanned regions). Pages are sliced locally; cloud OCR runs only when needed.
 
 ## Requirements
 
 - Python 3.11+
-- [pipx](https://pipx.pypa.io/)
+- [pipx](https://pipx.pypa.io/) (CLI install)
 - `OPENAI_API_KEY` environment variable
+- Node.js with `npx` (skill install only)
 
 ## Install
 
-The install script sets up both the global `pdf2md-ai` CLI (via pipx) and the Cursor agent skill.
-
-Clone the repo, then run the install script from the repo root:
+### CLI
 
 ```bash
-git clone <repo-url>
-cd pdf2md-ai-skill
-bash skill/pdf2md-ai/scripts/install.sh
+pipx install git+https://github.com/illescasDaniel/pdf2md-ai-skill.git --force
+```
+
+### Agent skill
+
+Installs the skill **globally** for Cursor, Claude Code, Codex, and other agents supported by [agent-install](https://github.com/millionco/agent-install). The skill invokes the CLI, so install the CLI first.
+
+All supported agents:
+
+```bash
+npx agent-install@latest skill add illescasDaniel/pdf2md-ai-skill/skill/pdf2md-ai -g -y -a '*'
+```
+
+Specific agents only:
+
+```bash
+npx agent-install@latest skill add illescasDaniel/pdf2md-ai-skill/skill/pdf2md-ai -g -y -a cursor
+npx agent-install@latest skill add illescasDaniel/pdf2md-ai-skill/skill/pdf2md-ai -g -y -a cursor -a claude-code
 ```
 
 After install, set your API key:
@@ -28,22 +42,35 @@ After install, set your API key:
 export OPENAI_API_KEY='your-key-here'
 ```
 
-Upgrade after pulling changes — re-run the install script (handles first install and upgrade; refreshes the pipx CLI and skill copy).
+Upgrade — re-run the same install command(s).
 
-### Manual install
+### Uninstall
 
-If you prefer not to use the script:
+CLI:
 
 ```bash
-# CLI only (from repo root)
-pipx install .
-
-# Cursor skill only (from repo root)
-mkdir -p ~/.cursor/skills
-cp -r skill/pdf2md-ai ~/.cursor/skills/
+pipx uninstall pdf2md-ai
 ```
 
-## Usage
+Agent skill (all agents where it was installed):
+
+```bash
+npx agent-install@latest skill remove pdf2md-ai -g -y -a '*'
+```
+
+Specific agents only:
+
+```bash
+npx agent-install@latest skill remove pdf2md-ai -g -y -a cursor
+```
+
+List what is installed:
+
+```bash
+pipx list
+npx agent-install@latest skill list
+```
+
 
 ```bash
 # Single page
@@ -87,7 +114,16 @@ pip install -e ".[dev]"
 ./scripts/quality/checks.sh         # verify clean
 ```
 
-Steps: Ruff (lint + format, tabs) → ShellCheck + shfmt → basedpyright. CI runs the same `./scripts/quality/checks.sh` on push and pull requests.
+Install from your local clone (CLI and skill) while iterating:
+
+```bash
+pipx install . --force
+npx agent-install@latest skill add ./skill/pdf2md-ai -g -y -a cursor
+```
+
+If `pipx install` fails to upgrade an existing venv, try `UV_VENV_CLEAR=1 pipx install . --force`.
+
+Steps: Ruff (lint + format, tabs) → ShellCheck + shfmt → basedpyright → smoke (CLI `--help` and agent-install skill list). CI runs the same `./scripts/quality/checks.sh` on push and pull requests.
 
 ## How it works
 

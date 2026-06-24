@@ -2,7 +2,7 @@
 
 set -u
 
-# Quality gate — ruff, shell, basedpyright.
+# Quality gate — ruff, shell, basedpyright, smoke.
 # --fix: ruff autofix+format and shfmt write; ignored when CI=true.
 
 quality_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -27,7 +27,7 @@ if [[ "${CI:-}" == "true" && "${FIX}" == true ]]; then
 	FIX=false
 fi
 
-GATE_PLANNED_STEPS=3
+GATE_PLANNED_STEPS=4
 gate_init
 
 # shellcheck source=scripts/quality/internal/lib.sh
@@ -132,6 +132,19 @@ else
 		gate_gha_error "" "" "" "basedpyright" "type check failed (exit ${pyright_exit})"
 		gate_record_fail 1 0
 	fi
+fi
+
+# --- 4. smoke ---
+gate_step_start "smoke"
+smoke_output="$("${quality_dir}/smoke.sh" 2>&1)"
+smoke_exit=$?
+printf '%s\n' "${smoke_output}"
+if [[ "${smoke_exit}" -eq 0 ]]; then
+	gate_record_pass
+else
+	gate_gha_error "" "" "" "smoke" "install smoke tests failed (exit ${smoke_exit})"
+	gate_record_fail 1 0
+	gate_add_detail "[smoke] exit ${smoke_exit}"
 fi
 
 gate_exit
